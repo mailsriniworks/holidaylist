@@ -7,20 +7,17 @@
   // ==================== CONFIGURATION ====================
   const CONFIG = {
     dataFile: './data/states.json',
-    views: ['map', 'grid', 'table', 'list'],
     defaultView: 'map',
-    debounceDelay: 200,
-    animationStagger: 50
+    debounceDelay: 300,
+    animationStagger: 40
   };
 
   // ==================== STATE MANAGEMENT ====================
   const AppState = {
     states: [],
-    currentView: CONFIG.defaultView,
+    currentView: 'map',
     selectedState: null,
     searchQuery: '',
-    currentFilter: 'all',
-    sortBy: 'name',
     theme: localStorage.getItem('theme') || 'light'
   };
 
@@ -30,9 +27,6 @@
     quickSearch: document.getElementById('quickSearch'),
     themeToggle: document.getElementById('themeToggle'),
     
-    // View switcher
-    viewBtns: document.querySelectorAll('.view-btn'),
-    
     // Map view
     mapView: document.getElementById('mapView'),
     usMap: document.getElementById('usMap'),
@@ -41,24 +35,6 @@
     stateDetail: document.getElementById('stateDetail'),
     panelContent: document.getElementById('panelContent'),
     closePanel: document.getElementById('closePanel'),
-    
-    // Grid view
-    gridView: document.getElementById('gridView'),
-    gridContainer: document.getElementById('gridContainer'),
-    filterChips: document.querySelectorAll('[data-filter]'),
-    sortSelect: document.getElementById('sortSelect'),
-    
-    // Table view
-    tableView: document.getElementById('tableView'),
-    tableBody: document.getElementById('tableBody'),
-    exportTable: document.getElementById('exportTable'),
-    expandAll: document.getElementById('expandAll'),
-    
-    // List view
-    listView: document.getElementById('listView'),
-    accordion: document.getElementById('accordion'),
-    collapseAllList: document.getElementById('collapseAllList'),
-    expandAllList: document.getElementById('expandAllList'),
     
     // Stats
     stateCount: document.getElementById('stateCount'),
@@ -161,45 +137,9 @@
     
     const activeView = document.getElementById(`${viewName}View`);
     if (activeView) {
-      activeView.classList.remove('hidden');
-    }
-    
-    // Render appropriate view
-    switch(viewName) {
-      case 'map':
-        renderMapView();
-        break;
-      case 'grid':
-        renderGridView();
-        break;
-      case 'table':
-        renderTableView();
-        break;
-      case 'list':
-        renderListView();
-        break;
-    }
-  }
-
-  // ==================== MAP VIEW ====================
-  function renderMapView() {
-    renderStateList();
-    initUSMap();
-  }
-
-  function renderStateList() {
-    if (!DOM.stateList) return;
-    
-    const filtered = filterStates(AppState.states, AppState.searchQuery);
-    DOM.stateList.innerHTML = '';
-    
-    filtered.forEach((state, index) => {
-      const item = document.createElement('div');
-      item.className = 'state-list-item';
-      item.style.animationDelay = `${index * 20}ms`;
-      item.innerHTML = `
-        <div class="state-list-info">
-          <div class="state-list-name">${Utils.escapeHtml(state.name)}</div>
+      activeView.classList.remoRENDERING ====================
+  function renderView() {
+    renderMapView();     <div class="state-list-name">${Utils.escapeHtml(state.name)}</div>
           <div class="state-list-meta">
             <span class="state-code">${state.short}</span>
             <span class="holiday-count">${Utils.formatHolidayCount(state.holidays?.length || 0)}</span>
@@ -347,232 +287,11 @@
     sorted.forEach(state => {
       const row = document.createElement('tr');
       const uniqueHolidays = state.holidays?.filter(h => 
-        h.notes?.includes('state') || h.notes?.includes('exclusive')
-      ) || [];
-      
-      row.innerHTML = `
-        <td class="td-state">
-          <strong>${Utils.escapeHtml(state.name)}</strong>
-        </td>
-        <td class="td-code">${state.short}</td>
-        <td class="td-count">
-          <span class="badge badge-primary">${state.holidays?.length || 0}</span>
-        </td>
-        <td class="td-unique">
-          ${uniqueHolidays.length > 0 ? 
-            `<span class="badge badge-accent">${uniqueHolidays.length}</span>` : 
-            '<span class="text-muted">—</span>'}
-        </td>
-        <td class="td-actions">
-          <button class="btn-table-action" data-action="view">View</button>
-          <button class="btn-table-action" data-action="expand">Expand</button>
-        </td>
-      `;
-      
-      const detailRow = document.createElement('tr');
-      detailRow.className = 'detail-row';
-      detailRow.style.display = 'none';
-      detailRow.innerHTML = `
-        <td colspan="5">
-          <div class="detail-content">
-            <div class="detail-holidays">
-              ${(state.holidays || []).map(h => `
-                <div class="detail-holiday">
-                  <span class="detail-holiday-icon">${Utils.getHolidayIcon(h.name)}</span>
-                  <span class="detail-holiday-name">${Utils.escapeHtml(h.name)}</span>
-                  <span class="detail-holiday-when">${Utils.escapeHtml(h.when || '')}</span>
-                </div>
-              `).join('')}
-            </div>
-          </div>
-        </td>
-      `;
-      
-      row.querySelector('[data-action="expand"]').addEventListener('click', function() {
-        const isExpanded = detailRow.style.display !== 'none';
-        detailRow.style.display = isExpanded ? 'none' : 'table-row';
-        this.textContent = isExpanded ? 'Expand' : 'Collapse';
-      });
-      
-      row.querySelector('[data-action="view"]').addEventListener('click', () => {
-        selectState(state);
-        switchView('map');
-      });
-      
-      DOM.tableBody.appendChild(row);
-      DOM.tableBody.appendChild(detailRow);
-    });
-  }
-
-  // ==================== LIST VIEW ====================
-  function renderListView() {
-    if (!DOM.accordion) return;
-    
-    const filtered = filterStates(AppState.states, AppState.searchQuery);
-    DOM.accordion.innerHTML = '';
-    
-    filtered.forEach((state, index) => {
-      const card = document.createElement('article');
-      card.className = 'card';
-      card.style.animationDelay = `${index * CONFIG.animationStagger}ms`;
-      
-      const id = `state-${state.short}`;
-      
-      card.innerHTML = `
-        <header class="card-header" role="button" tabindex="0" aria-expanded="false" aria-controls="${id}">
-          <div>
-            <div class="card-title">
-              <span class="state-flag">📍</span>${Utils.escapeHtml(state.name)}
-            </div>
-            <div class="card-sub">
-              <span>${state.short}</span>
-              <span class="holiday-badge">📅 ${state.holidays?.length || 0} holidays</span>
-            </div>
-          </div>
-          <button class="card-toggle" aria-label="Toggle details">▾</button>
-        </header>
-        <div id="${id}" class="card-content hidden" aria-hidden="true">
-          ${state.details ? `<p class="card-description">${Utils.escapeHtml(state.details)}</p>` : ''}
-          <div class="holidays-list">
-            ${(state.holidays || []).map(h => `
-              <div class="holiday">
-                <div class="holiday-icon">${Utils.getHolidayIcon(h.name)}</div>
-                <div class="holiday-content">
-                  <strong>${Utils.escapeHtml(h.name)}</strong>
-                  <small>${Utils.escapeHtml(h.when || '')}</small>
-                  ${h.notes ? `<div class="holiday-note">💡 ${Utils.escapeHtml(h.notes)}</div>` : ''}
-                </div>
-              </div>
-            `).join('')}
-          </div>
-          ${state.detailedHTML ? `<div class="card-pto">${state.detailedHTML}</div>` : ''}
-        </div>
-      `;
-      
-      const header = card.querySelector('.card-header');
-      const content = card.querySelector('.card-content');
-      const toggle = card.querySelector('.card-toggle');
-      
-      const toggleCard = () => {
-        const isOpen = content.classList.toggle('hidden');
-        header.setAttribute('aria-expanded', !isOpen);
-        content.setAttribute('aria-hidden', isOpen);
-        toggle.setAttribute('aria-expanded', !isOpen);
-      };
-      
-      header.addEventListener('click', toggleCard);
-      header.addEventListener('keypress', (e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          toggleCard();
-        }
-      });
-      
-      DOM.accordion.appendChild(card);
-    });
-  }
-
-  // ==================== FILTERING & SORTING ====================
-  function filterStates(states, query, filter = 'all') {
-    let filtered = states.filter(s => 
+        h.notes?.includes(FILTERING ====================
+  function filterStates(states, query) {
+    return states.filter(s => 
       s.name.toLowerCase().includes(query.toLowerCase())
-    );
-    
-    if (filter === 'unique') {
-      filtered = filtered.filter(s => {
-        const hasUnique = s.holidays?.some(h => 
-          h.notes?.includes('state') || h.notes?.includes('exclusive')
-        );
-        return hasUnique || (s.holidays?.length || 0) > 12;
-      });
-    } else if (filter === 'federal') {
-      filtered = filtered.filter(s => (s.holidays?.length || 0) <= 11);
-    }
-    
-    return filtered;
-  }
-
-  function sortStates(states, sortBy) {
-    const sorted = [...states];
-    
-    switch(sortBy) {
-      case 'name':
-        sorted.sort((a, b) => a.name.localeCompare(b.name));
-        break;
-      case 'holidays':
-        sorted.sort((a, b) => (b.holidays?.length || 0) - (a.holidays?.length || 0));
-        break;
-      case 'unique':
-        sorted.sort((a, b) => {
-          const aUnique = a.holidays?.filter(h => 
-            h.notes?.includes('state') || h.notes?.includes('exclusive')
-          ).length || 0;
-          const bUnique = b.holidays?.filter(h => 
-            h.notes?.includes('state') || h.notes?.includes('exclusive')
-          ).length || 0;
-          return bUnique - aUnique;
-        });
-        break;
-    }
-    
-    return sorted;
-  }
-
-  // ==================== EVENT HANDLERS ====================
-  function setupEventListeners() {
-    // Theme toggle
-    DOM.themeToggle?.addEventListener('click', toggleTheme);
-    
-    // View switching
-    DOM.viewBtns.forEach(btn => {
-      btn.addEventListener('click', () => switchView(btn.dataset.view));
-    });
-    
-    // Search
-    if (DOM.stateSearch) {
-      DOM.stateSearch.addEventListener('input', Utils.debounce((e) => {
-        AppState.searchQuery = e.target.value;
-        renderStateList();
-      }, CONFIG.debounceDelay));
-    }
-    
-    if (DOM.quickSearch) {
-      DOM.quickSearch.addEventListener('input', Utils.debounce((e) => {
-        AppState.searchQuery = e.target.value;
-        renderCurrentView();
-      }, CONFIG.debounceDelay));
-    }
-    
-    // Filter chips
-    DOM.filterChips?.forEach(chip => {
-      chip.addEventListener('click', () => {
-        DOM.filterChips.forEach(c => c.classList.remove('chip-active'));
-        chip.classList.add('chip-active');
-        AppState.currentFilter = chip.dataset.filter;
-        renderGridView();
-      });
-    });
-    
-    // Sort select
-    DOM.sortSelect?.addEventListener('change', (e) => {
-      AppState.sortBy = e.target.value;
-      renderGridView();
-    });
-    
-    // Close panel
-    DOM.closePanel?.addEventListener('click', closeStateDetail);
-    
-    // Export table
-    DOM.exportTable?.addEventListener('click', exportTableToCSV);
-    
-    // Expand/collapse all
-    DOM.expandAll?.addEventListener('click', () => {
-      document.querySelectorAll('.detail-row').forEach(row => {
-        row.style.display = 'table-row';
-      });
-      document.querySelectorAll('[data-action="expand"]').forEach(btn => {
-        btn.textContent = 'Collapse';
-      });
+    )
     });
     
     DOM.collapseAllList?.addEventListener('click', () => {
@@ -670,3 +389,37 @@
   // Start the application
   init();
 })();
+Search
+    if (DOM.stateSearch) {
+      DOM.stateSearch.addEventListener('input', Utils.debounce((e) => {
+        AppState.searchQuery = e.target.value;
+        renderStateList();
+      }, CONFIG.debounceDelay));
+    }
+    
+    if (DOM.quickSearch) {
+      DOM.quickSearch.addEventListener('input', Utils.debounce((e) => {
+        AppState.searchQuery = e.target.value;
+        renderStateList();
+      }, CONFIG.debounceDelay));
+    }
+    
+    // Close panel
+    DOM.closePanel?.addEventListener('click', closeStateDetail);
+    
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        (DOM.quickSearch || DOM.stateSearch)?.focus();
+      }
+      
+      if (e.key === 'Escape') {
+        if (DOM.stateDetail?.classList.contains('active')) {
+          closeStateDetail();
+        }
+      }
+    });map view
+    renderView();
+    
+    console.log('✨ US Holidays 2026
