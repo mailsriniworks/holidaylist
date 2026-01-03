@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>US State Holiday List</title>
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="app">
+    <header>
+      <h1>US State Holiday List (2026)</h1>
+      <p class="lead">Search for a state to open its holiday list. Click a state to expand/collapse.</p>
+      <label class="search-label" for="stateSearch">Search state:</label>
+      <input id="stateSearch" class="search" placeholder="Type a state name (e.g., Virginia)" aria-label="Search state" />
+    </header>
+
+    <section id="accordion" class="accordion" aria-live="polite"></section>
+
+    <footer class="footer">
+      <small>Data source: placeholder federal holidays per state. Edit <code>data/states.json</code> to add or change holidays and details.</small>
+    </footer>
+  </main>
+
+  <script src="./app.js"></script>
+</body>
+</html>

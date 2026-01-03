@@ -1,0 +1,158 @@
+:root{
+  --bg: #f7f9fb;
+  --card: #ffffff;
+  --muted: #6b7280;
+  --accent: #2563eb;
+  --border: #e6eef8;
+  --radius: 10px;
+  --max-width: 980px;
+  font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  color-scheme: light;
+}
+
+*{box-sizing:border-box}
+body{
+  margin:0;
+  min-height:100vh;
+  background: linear-gradient(180deg,var(--bg), #f0f6ff 60%);
+  padding:24px;
+  display:flex;
+  justify-content:center;
+  font-size:16px;
+}
+
+.app{
+  width:100%;
+  max-width:var(--max-width);
+  background:transparent;
+}
+
+header{
+  margin-bottom:16px;
+}
+
+h1{
+  margin:0 0 8px 0;
+  font-size:1.6rem;
+}
+
+.lead{
+  margin:0 0 12px 0;
+  color:var(--muted);
+}
+
+.search-label{
+  display:block;
+  font-size:0.9rem;
+  margin-bottom:6px;
+  color:var(--muted);
+}
+
+.search{
+  width:100%;
+  padding:10px 12px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:var(--card);
+  outline:none;
+  box-shadow:0 1px 0 rgba(16,24,40,0.02);
+  font-size:1rem;
+  margin-bottom:18px;
+}
+
+.accordion{
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+}
+
+.card{
+  background:var(--card);
+  border-radius:var(--radius);
+  padding:12px;
+  border:1px solid var(--border);
+  box-shadow:0 8px 20px rgba(14,30,50,0.03);
+}
+
+.card-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  cursor:pointer;
+  user-select:none;
+}
+
+.card-title{
+  font-weight:600;
+  font-size:1rem;
+}
+
+.card-sub{
+  color:var(--muted);
+  font-size:0.9rem;
+}
+
+.card-toggle{
+  background:transparent;
+  border:0;
+  font-size:1.2rem;
+  color:var(--accent);
+  transform-origin:center;
+  transition:transform .18s ease;
+}
+
+.card-content{
+  margin-top:10px;
+  padding-top:12px;
+  border-top:1px dashed #eef6ff;
+}
+
+.hidden{display:none}
+
+.holidays-list{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+}
+
+.holiday{
+  display:flex;
+  gap:12px;
+  align-items:flex-start;
+  padding:8px;
+  border-radius:8px;
+  background: linear-gradient(180deg, rgba(37,99,235,0.03), transparent 40%);
+  border:1px solid rgba(37,99,235,0.04);
+}
+
+.holiday strong{display:block}
+.holiday small{color:var(--muted)}
+
+.table{
+  width:100%;
+  border-collapse:collapse;
+  margin-top:8px;
+}
+
+.table th, .table td{
+  border:1px solid #e9f2ff;
+  padding:8px;
+  text-align:left;
+  font-size:0.95rem;
+}
+
+.table th{
+  background:#f0f7ff;
+  font-weight:600;
+}
+
+.footer{
+  margin-top:18px;
+  color:var(--muted);
+  font-size:0.9rem;
+}
+
+@media (prefers-reduced-motion: no-preference){
+  .card-toggle[aria-expanded="true"]{transform:rotate(180deg)}
+}
