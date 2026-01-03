@@ -3,39 +3,104 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>US State Holiday List</title>
+  <meta name="description" content="Comprehensive US state and federal holiday calendar for 2026 with smart PTO planning tools" />
+  <title>🗓️ US State Holiday Calendar 2026 | Plan Your Time Off</title>
   <link rel="stylesheet" href="./styles.css" />
-  <link rel="stylesheet" href="./ui.css" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
   <!-- Skip link for keyboard users -->
   <a class="skip-link" href="#main">Skip to content</a>
 
-  <main class="app" id="main">
-    <header>
-      <div class="header-row">
-        <div>
-          <h1>US State Holiday List (2026)</h1>
-          <p class="lead">Search for a state to open its holiday list. Click a state to expand/collapse.</p>
-        </div>
+  <!-- Background decorative elements -->
+  <div class="bg-decoration"></div>
+  <div class="bg-decoration-2"></div>
 
-        <div class="header-actions">
-          <label class="search-label" for="stateSearch">Search state:</label>
-          <input id="stateSearch" class="search" placeholder="Type a state name (e.g., Virginia)" aria-label="Search state" />
-          <!-- Primary CTA: prominent and keyboard-accessible -->
-          <button id="addHolidayBtn" class="btn btn-primary" type="button">Add holiday</button>
+  <main class="app" id="main">
+    <header class="hero">
+      <div class="hero-content">
+        <div class="hero-badge">📅 2026 Edition</div>
+        <h1 class="hero-title">
+          <span class="gradient-text">US State Holiday</span>
+          <span class="hero-title-line2">Calendar & PTO Planner</span>
+        </h1>
+        <p class="hero-subtitle">Discover state-specific holidays and maximize your time off with strategic PTO planning</p>
+      </div>
+
+      <div class="search-container">
+        <div class="search-wrapper">
+          <svg class="search-icon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <circle cx="11" cy="11" r="8"></circle>
+            <path d="m21 21-4.35-4.35"></path>
+          </svg>
+          <input 
+            id="stateSearch" 
+            class="search" 
+            placeholder="Search for your state..." 
+            aria-label="Search state" 
+            type="text"
+            autocomplete="off" />
+          <div class="search-clear" id="clearSearch" aria-label="Clear search" role="button" tabindex="0">×</div>
+        </div>
+        <div class="filter-chips">
+          <button class="chip chip-active" data-filter="all">All States</button>
+          <button class="chip" data-filter="unique">Unique Holidays</button>
+          <button class="chip" data-filter="federal">Federal Only</button>
+        </div>
+      </div>
+
+      <div class="stats-bar">
+        <div class="stat-item">
+          <div class="stat-value" id="stateCount">50</div>
+          <div class="stat-label">States</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-value" id="holidayCount">—</div>
+          <div class="stat-label">Total Holidays</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat-item">
+          <div class="stat-value">2026</div>
+          <div class="stat-label">Year</div>
         </div>
       </div>
     </header>
 
-    <section id="accordion" class="accordion" aria-live="polite"></section>
+    <section id="accordion" class="accordion" aria-live="polite">
+      <div class="loading-skeleton">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </section>
 
     <footer class="footer">
-      <small>Data source: placeholder federal holidays per state. Edit <code>data/states.json</code> to add or change holidays and details.</small>
+      <div class="footer-content">
+        <div class="footer-section">
+          <h3>About This Calendar</h3>
+          <p>Comprehensive federal and state holiday information for all 50 US states in 2026.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Data Source</h3>
+          <p>Holiday data maintained in <code>data/states.json</code>. View on GitHub to contribute.</p>
+        </div>
+        <div class="footer-section">
+          <h3>Theme</h3>
+          <button id="themeToggle" class="theme-toggle" aria-label="Toggle dark mode">
+            <span class="theme-icon">🌙</span>
+            <span class="theme-text">Dark Mode</span>
+          </button>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <small>© 2026 US State Holiday Calendar • Made with ❤️ for better vacation planning</small>
+      </div>
     </footer>
   </main>
 
   <script src="./app.js" defer></script>
-  <script src="./ui.js" defer></script>
 </body>
 </html>
