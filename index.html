@@ -5,14 +5,27 @@
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>US State Holiday List</title>
   <link rel="stylesheet" href="./styles.css" />
+  <link rel="stylesheet" href="./ui.css" />
 </head>
 <body>
-  <main class="app">
+  <!-- Skip link for keyboard users -->
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <main class="app" id="main">
     <header>
-      <h1>US State Holiday List (2026)</h1>
-      <p class="lead">Search for a state to open its holiday list. Click a state to expand/collapse.</p>
-      <label class="search-label" for="stateSearch">Search state:</label>
-      <input id="stateSearch" class="search" placeholder="Type a state name (e.g., Virginia)" aria-label="Search state" />
+      <div class="header-row">
+        <div>
+          <h1>US State Holiday List (2026)</h1>
+          <p class="lead">Search for a state to open its holiday list. Click a state to expand/collapse.</p>
+        </div>
+
+        <div class="header-actions">
+          <label class="search-label" for="stateSearch">Search state:</label>
+          <input id="stateSearch" class="search" placeholder="Type a state name (e.g., Virginia)" aria-label="Search state" />
+          <!-- Primary CTA: prominent and keyboard-accessible -->
+          <button id="addHolidayBtn" class="btn btn-primary" type="button">Add holiday</button>
+        </div>
+      </div>
     </header>
 
     <section id="accordion" class="accordion" aria-live="polite"></section>
@@ -22,6 +35,7 @@
     </footer>
   </main>
 
-  <script src="./app.js"></script>
+  <script src="./app.js" defer></script>
+  <script src="./ui.js" defer></script>
 </body>
 </html>
