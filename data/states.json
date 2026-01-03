@@ -1,26 +1,5 @@
 [ 
   {
-    "name": "Virginia",
-    "short": "VA",
-    "holidays": [
-      { "name": "New Year's Day (Observed)", "when": "Jan 1 (Observed)", "notes": "State holiday" },
-      { "name": "Martin Luther King Jr. Day", "when": "Third Monday in January" },
-      { "name": "George Washington Day (Presidents Day)", "when": "Third Monday in February" },
-      { "name": "Memorial Day", "when": "Last Monday in May" },
-      { "name": "Juneteenth", "when": "June 19" },
-      { "name": "Independence Day", "when": "July 4" },
-      { "name": "Labor Day", "when": "First Monday in September" },
-      { "name": "Yorktown Victory Day", "when": "October 19 (state holiday)", "notes": "Virginia-exclusive" },
-      { "name": "Election Day (state employees)", "when": "First Tuesday after the first Monday in November", "notes": "VA grants office hours for voting" },
-      { "name": "Veterans Day", "when": "Nov 11" },
-      { "name": "Thanksgiving", "when": "Fourth Thursday in November" },
-      { "name": "Christmas (Observed)", "when": "Dec 25 (Observed)" }
-    ],
-    "details": "In Virginia, state employees enjoy a particularly generous holiday schedule. In 2026, you can leverage unique state holidays like Election Day and Yorktown Victory Day to maximize time off.",
-    "detailedHTML": "<h3>Virginia (State Employee Edition) — 2026 Highlights</h3>\n<p>In Virginia, state employees enjoy a particularly generous holiday schedule. In 2026, you can leverage unique state holidays like Election Day, Yorktown Victory Day, and additional holiday hours to maximize your time off. By strategically using a small number of PTO days, you can multiply and stack weekends and state holidays for long vacations.</p>\n<h4>2026 Virginia PTO Maximizer (State Employee Edition)</h4>\n<table class=\"table\">\n  <thead>\n    <tr>\n      <th>Month</th>\n      <th>Vacation Window</th>\n      <th>PTO Cost</th>\n      <th>Days Off</th>\n      <th>Derivation Logic (The Strategy)</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr><td>JAN</td><td>Jan 1 – Jan 4</td><td>1</td><td>4</td><td>New Year's is Thursday. Take Fri (Jan 2) for a 4-day kickoff.</td></tr>\n    <tr><td>JAN</td><td>Jan 17 – Jan 25</td><td>4</td><td>9</td><td>The Stack: Use MLK Monday + 4 PTO days to bridge two weekends.</td></tr>\n    <tr><td>FEB</td><td>Feb 14 – Feb 17</td><td>1</td><td>4</td><td>George Washington Day (Mon). Take Tue (Feb 17) for a 4-day trip.</td></tr>\n    <tr><td>MAY</td><td>May 23 – May 31</td><td>4</td><td>9</td><td>Summer Start: Memorial Day Mon + 4 PTO days for a 9-day break.</td></tr>\n    <tr><td>JUN</td><td>June 19 – June 21</td><td>0</td><td>3</td><td>Natural 3-Day: Juneteenth falls on a Friday. No PTO needed.</td></tr>\n    <tr><td>JUL</td><td>July 3 – July 6</td><td>1</td><td>4</td><td>Independence Day (Observed Fri). Take Mon (July 6) for 4 days.</td></tr>\n    <tr><td>SEP</td><td>Sept 5 – Sept 8</td><td>1</td><td>4</td><td>Labor Day (Mon). Take Tue (Sept 8) for a 4-day late summer reset.</td></tr>\n    <tr><td>OCT</td><td>Oct 10 – Oct 13</td><td>1</td><td>4</td><td>VA Exclusive: Yorktown Victory Day (Mon). Take Tue for 4 days.</td></tr>\n    <tr><td>NOV</td><td>Oct 31 – Nov 3</td><td>1</td><td>4</td><td>VA Exclusive: Election Day (Tue). Take Mon (Nov 2) for 4 days.</td></tr>\n    <tr><td>NOV</td><td>Nov 7 – Nov 11</td><td>2</td><td>5</td><td>Veterans Day is Wed. Take Mon/Tue to link to the weekend.</td></tr>\n    <tr><td>NOV</td><td>Nov 25 – Nov 29</td><td>0.5</td><td>5</td><td>The 4-Hour Hack: State grants 4 hours off Wed. Use 0.5 PTO to get 5 days.</td></tr>\n    <tr><td>DEC</td><td>Dec 24 – Dec 27</td><td>0</td><td>4</td><td>Natural 4-Day: State grants 8 hours (full day) on Dec 24. No PTO needed!</td></tr>\n    <tr><td>DEC</td><td>Dec 31 – Jan 3</td><td>1</td><td>4</td><td>Take Dec 31 (Thurs) to bridge the New Year's Fri holiday to the weekend.</td></tr>\n  </tbody>\n</table>\n<p><strong>Total (2026):</strong> ~17.5 PTO days to get 65 days off (Efficiency: stay OOO for over 2 months using minimal leave).</p>\n"
-  },
-
-  {
     "name": "Alabama",
     "short": "AL",
     "holidays": [
@@ -808,9 +787,23 @@
 
   {
     "name": "Virginia",
-    "short": "VA-duplicate",
-    "holidays": [],
-    "details": "Duplicate placeholder (redundant entry — safe to delete)."
+    "short": "VA",
+    "holidays": [
+      { "name": "New Year's Day (Observed)", "when": "Jan 1 (Observed)", "notes": "State holiday" },
+      { "name": "Martin Luther King Jr. Day", "when": "Third Monday in January" },
+      { "name": "George Washington Day (Presidents Day)", "when": "Third Monday in February" },
+      { "name": "Memorial Day", "when": "Last Monday in May" },
+      { "name": "Juneteenth", "when": "June 19" },
+      { "name": "Independence Day", "when": "July 4" },
+      { "name": "Labor Day", "when": "First Monday in September" },
+      { "name": "Yorktown Victory Day", "when": "October 19 (state holiday)", "notes": "Virginia-exclusive" },
+      { "name": "Election Day (state employees)", "when": "First Tuesday after the first Monday in November", "notes": "VA grants office hours for voting" },
+      { "name": "Veterans Day", "when": "Nov 11" },
+      { "name": "Thanksgiving", "when": "Fourth Thursday in November" },
+      { "name": "Christmas (Observed)", "when": "Dec 25 (Observed)" }
+    ],
+    "details": "In Virginia, state employees enjoy a particularly generous holiday schedule. In 2026, you can leverage unique state holidays like Election Day and Yorktown Victory Day to maximize time off.",
+    "detailedHTML": "<h3>Virginia (State Employee Edition) — 2026 Highlights</h3>\n<p>In Virginia, state employees enjoy a particularly generous holiday schedule. In 2026, you can leverage unique state holidays like Election Day, Yorktown Victory Day, and additional holiday hours to maximize your time off. By strategically using a small number of PTO days, you can multiply and stack weekends and state holidays for long vacations.</p>\n<h4>2026 Virginia PTO Maximizer (State Employee Edition)</h4>\n<table class=\"table\">\n  <thead>\n    <tr>\n      <th>Month</th>\n      <th>Vacation Window</th>\n      <th>PTO Cost</th>\n      <th>Days Off</th>\n      <th>Derivation Logic (The Strategy)</th>\n    </tr>\n  </thead>\n  <tbody>\n    <tr><td>JAN</td><td>Jan 1 – Jan 4</td><td>1</td><td>4</td><td>New Year's is Thursday. Take Fri (Jan 2) for a 4-day kickoff.</td></tr>\n    <tr><td>JAN</td><td>Jan 17 – Jan 25</td><td>4</td><td>9</td><td>The Stack: Use MLK Monday + 4 PTO days to bridge two weekends.</td></tr>\n    <tr><td>FEB</td><td>Feb 14 – Feb 17</td><td>1</td><td>4</td><td>George Washington Day (Mon). Take Tue (Feb 17) for a 4-day trip.</td></tr>\n    <tr><td>MAY</td><td>May 23 – May 31</td><td>4</td><td>9</td><td>Summer Start: Memorial Day Mon + 4 PTO days for a 9-day break.</td></tr>\n    <tr><td>JUN</td><td>June 19 – June 21</td><td>0</td><td>3</td><td>Natural 3-Day: Juneteenth falls on a Friday. No PTO needed.</td></tr>\n    <tr><td>JUL</td><td>July 3 – July 6</td><td>1</td><td>4</td><td>Independence Day (Observed Fri). Take Mon (July 6) for 4 days.</td></tr>\n    <tr><td>SEP</td><td>Sept 5 – Sept 8</td><td>1</td><td>4</td><td>Labor Day (Mon). Take Tue (Sept 8) for a 4-day late summer reset.</td></tr>\n    <tr><td>OCT</td><td>Oct 10 – Oct 13</td><td>1</td><td>4</td><td>VA Exclusive: Yorktown Victory Day (Mon). Take Tue for 4 days.</td></tr>\n    <tr><td>NOV</td><td>Oct 31 – Nov 3</td><td>1</td><td>4</td><td>VA Exclusive: Election Day (Tue). Take Mon (Nov 2) for 4 days.</td></tr>\n    <tr><td>NOV</td><td>Nov 7 – Nov 11</td><td>2</td><td>5</td><td>Veterans Day is Wed. Take Mon/Tue to link to the weekend.</td></tr>\n    <tr><td>NOV</td><td>Nov 25 – Nov 29</td><td>0.5</td><td>5</td><td>The 4-Hour Hack: State grants 4 hours off Wed. Use 0.5 PTO to get 5 days.</td></tr>\n    <tr><td>DEC</td><td>Dec 24 – Dec 27</td><td>0</td><td>4</td><td>Natural 4-Day: State grants 8 hours (full day) on Dec 24. No PTO needed!</td></tr>\n    <tr><td>DEC</td><td>Dec 31 – Jan 3</td><td>1</td><td>4</td><td>Take Dec 31 (Thurs) to bridge the New Year's Fri holiday to the weekend.</td></tr>\n  </tbody>\n</table>\n<p><strong>Total (2026):</strong> ~17.5 PTO days to get 65 days off (Efficiency: stay OOO for over 2 months using minimal leave).</p>\n"
   },
 
   {

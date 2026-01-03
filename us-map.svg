@@ -1,0 +1,10 @@
+<svg viewBox="0 0 960 600" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simplified US Map with state paths -->
+  <!-- This is a placeholder - in production, you'd use a proper US map SVG with all state paths -->
+  <g id="states">
+    <!-- Sample states - you'll need a complete US map SVG -->
+    <path id="AL" d="M775,445 L795,445 L795,510 L775,510 Z" class="state-path" data-state="Alabama"/>
+    <path id="AK" d="M50,500 L150,500 L150,570 L50,570 Z" class="state-path" data-state="Alaska"/>
+    <!-- Add all 50 states here with proper SVG paths -->
+  </g>
+</svg>
