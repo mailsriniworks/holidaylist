@@ -63,20 +63,7 @@
     },
     
     getHolidayIcon(holidayName) {
-      const icons = {
-        'new year': '🎆', 'martin luther king': '✊', 'mlk': '✊',
-        'president': '🎩', 'george washington': '🎩', 'memorial': '🇺🇸',
-        'juneteenth': '✊🏿', 'independence': '🎇', 'july 4': '🎇',
-        'labor': '⚒️', 'columbus': '⛵', 'veterans': '🎖️',
-        'thanksgiving': '🦃', 'christmas': '🎄', 'election': '🗳️',
-        'yorktown': '⚔️', 'cesar chavez': '🌟'
-      };
-      
-      const name = holidayName.toLowerCase();
-      for (const [key, icon] of Object.entries(icons)) {
-        if (name.includes(key)) return icon;
-      }
-      return '📅';
+      return '•';
     },
     
     formatHolidayCount(count) {
@@ -105,7 +92,7 @@
   function updateThemeIcon() {
     const icon = DOM.themeToggle?.querySelector('.theme-icon');
     if (icon) {
-      icon.textContent = AppState.theme === 'dark' ? '☀️' : '🌙';
+      icon.textContent = AppState.theme === 'dark' ? 'Light' : 'Dark';
     }
   }
 
@@ -173,12 +160,8 @@
 
   function selectState(state) {
     AppState.selectedState = state;
-    showStateDetail(state);
-    if (DOM.selectedStateDisplay) {
-      DOM.selectedStateDisplay.textContent = state.name;
-    }
-  }
-
+          <h3>Select a State</h3>
+          <p>Choose a state from the list to view holiday details</p>
   function showStateDetail(state) {
     if (!DOM.stateDetail || !DOM.panelContent) return;
     
@@ -215,11 +198,10 @@
           <div class="panel-pto">${state.detailedHTML}</div>
         </div>
       ` : ''}
-    `;
-    
-    DOM.stateDetail.classList.add('active');
-  }
-
+              <div class=\"panel-holiday-info\">
+                <div class=\"panel-holiday-name\">${Utils.escapeHtml(h.name)}</div>
+                <div class=\"panel-holiday-when\">${Utils.escapeHtml(h.when || '')}</div>
+                ${h.notes ? `<div class=\"panel-holiday-note\">${Utils.escapeHtml(h.notes)}</div>` : ''}
   function closeStateDetail() {
     if (DOM.stateDetail) {
       DOM.stateDetail.classList.remove('active');
