@@ -209,7 +209,7 @@
       `;
       
       item.addEventListener('click', () => selectState(state));
-      DOM.stateList.appendChild(item));
+      DOM.stateList.appendChild(item);
     });
   }
 

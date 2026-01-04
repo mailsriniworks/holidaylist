@@ -7,17 +7,20 @@
   // ==================== CONFIGURATION ====================
   const CONFIG = {
     dataFile: './data/states.json',
+    views: ['map', 'grid', 'table', 'list'],
     defaultView: 'map',
-    debounceDelay: 300,
-    animationStagger: 40
+    debounceDelay: 200,
+    animationStagger: 50
   };
 
   // ==================== STATE MANAGEMENT ====================
   const AppState = {
     states: [],
-    currentView: 'map',
+    currentView: CONFIG.defaultView,
     selectedState: null,
     searchQuery: '',
+    currentFilter: 'all',
+    sortBy: 'name',
     theme: localStorage.getItem('theme') || 'light'
   };
 
@@ -26,6 +29,11 @@
     // Navigation
     quickSearch: document.getElementById('quickSearch'),
     themeToggle: document.getElementById('themeToggle'),
+    stateDatalist: document.getElementById('stateDatalist'),
+    stateDatalist2: document.getElementById('stateDatalist2'),
+    
+    // View switcher
+    viewBtns: document.querySelectorAll('.view-btn'),
     
     // Map view
     mapView: document.getElementById('mapView'),
@@ -35,6 +43,24 @@
     stateDetail: document.getElementById('stateDetail'),
     panelContent: document.getElementById('panelContent'),
     closePanel: document.getElementById('closePanel'),
+    
+    // Grid view
+    gridView: document.getElementById('gridView'),
+    gridContainer: document.getElementById('gridContainer'),
+    filterChips: document.querySelectorAll('[data-filter]'),
+    sortSelect: document.getElementById('sortSelect'),
+    
+    // Table view
+    tableView: document.getElementById('tableView'),
+    tableBody: document.getElementById('tableBody'),
+    exportTable: document.getElementById('exportTable'),
+    expandAll: document.getElementById('expandAll'),
+    
+    // List view
+    listView: document.getElementById('listView'),
+    accordion: document.getElementById('accordion'),
+    collapseAllList: document.getElementById('collapseAllList'),
+    expandAllList: document.getElementById('expandAllList'),
     
     // Stats
     stateCount: document.getElementById('stateCount'),
@@ -63,11 +89,163 @@
     },
     
     getHolidayIcon(holidayName) {
-      return '•';
+      const icons = {
+        'new year': '🎆', 'martin luther king': '✊', 'mlk': '✊',
+        'president': '🎩', 'george washington': '🎩', 'memorial': '🇺🇸',
+        'juneteenth': '✊🏿', 'independence': '🎇', 'july 4': '🎇',
+        'labor': '⚒️', 'columbus': '⛵', 'veterans': '🎖️',
+        'thanksgiving': '🦃', 'christmas': '🎄', 'election': '🗳️',
+        'yorktown': '⚔️', 'cesar chavez': '🌟'
+      };
+      
+      const name = holidayName.toLowerCase();
+      for (const [key, icon] of Object.entries(icons)) {
+        if (name.includes(key)) return icon;
+      }
+      return '📅';
     },
     
     formatHolidayCount(count) {
       return count === 1 ? '1 holiday' : `${count} holidays`;
+    },
+    
+    // Smart PTO Analysis Functions
+    parseHolidayDate(holiday) {
+      // Parse common date formats for 2026
+      const when = holiday.when?.toLowerCase() || '';
+      
+      // Fixed dates
+      if (when.includes('jan 1') || when.includes('january 1')) return new Date(2026, 0, 1);
+      if (when.includes('july 4')) return new Date(2026, 6, 4);
+      if (when.includes('nov 11') || when.includes('november 11')) return new Date(2026, 10, 11);
+      if (when.includes('dec 25') || when.includes('december 25')) return new Date(2026, 11, 25);
+      
+      // Relative dates
+      if (when.includes('third monday in january')) return new Date(2026, 0, 19); // MLK Day
+      if (when.includes('third monday in february')) return new Date(2026, 1, 16); // Presidents Day
+      if (when.includes('last monday in may')) return new Date(2026, 4, 25); // Memorial Day
+      if (when.includes('first monday in september')) return new Date(2026, 8, 7); // Labor Day
+      if (when.includes('second monday in october')) return new Date(2026, 9, 12); // Columbus Day
+      if (when.includes('fourth thursday in november')) return new Date(2026, 10, 26); // Thanksgiving
+      
+      return null;
+    },
+    
+    getWeekday(date) {
+      const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+      return days[date.getDay()];
+    },
+    
+    formatDate(date) {
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      return `${months[date.getMonth()]} ${date.getDate()}`;
+    },
+    
+    analyzePTOOpportunities(holidays) {
+      const opportunities = [];
+      const parsedHolidays = holidays
+        .map(h => ({ ...h, date: this.parseHolidayDate(h) }))
+        .filter(h => h.date)
+        .sort((a, b) => a.date - b.date);
+      
+      parsedHolidays.forEach((holiday, index) => {
+        const date = holiday.date;
+        const dayOfWeek = date.getDay();
+        
+        // Thursday holiday - Bridge to Friday for 4-day weekend
+        if (dayOfWeek === 4) {
+          opportunities.push({
+            type: 'bridge',
+            holiday: holiday.name,
+            date: date,
+            ptoDays: 1,
+            totalDays: 4,
+            roi: 4,
+            description: `Take Friday ${this.formatDate(new Date(date.getTime() + 86400000))} for a 4-day weekend`,
+            suggestion: 'Thu-Sun'
+          });
+        }
+        
+        // Tuesday holiday - Bridge to Monday for 4-day weekend
+        if (dayOfWeek === 2) {
+          opportunities.push({
+            type: 'bridge',
+            holiday: holiday.name,
+            date: date,
+            ptoDays: 1,
+            totalDays: 4,
+            roi: 4,
+            description: `Take Monday ${this.formatDate(new Date(date.getTime() - 86400000))} for a 4-day weekend`,
+            suggestion: 'Sat-Tue'
+          });
+        }
+        
+        // Monday holiday - Natural 3-day weekend
+        if (dayOfWeek === 1) {
+          opportunities.push({
+            type: 'weekend',
+            holiday: holiday.name,
+            date: date,
+            ptoDays: 0,
+            totalDays: 3,
+            roi: Infinity,
+            description: `Natural 3-day weekend (no PTO needed)`,
+            suggestion: 'Sat-Mon'
+          });
+        }
+        
+        // Friday holiday - Natural 3-day weekend
+        if (dayOfWeek === 5) {
+          opportunities.push({
+            type: 'weekend',
+            holiday: holiday.name,
+            date: date,
+            ptoDays: 0,
+            totalDays: 3,
+            roi: Infinity,
+            description: `Natural 3-day weekend (no PTO needed)`,
+            suggestion: 'Fri-Sun'
+          });
+        }
+        
+        // Wednesday holiday - Bridge both sides for 5-day vacation
+        if (dayOfWeek === 3) {
+          opportunities.push({
+            type: 'stretch',
+            holiday: holiday.name,
+            date: date,
+            ptoDays: 2,
+            totalDays: 5,
+            roi: 2.5,
+            description: `Take Mon-Tue for a 5-day break (Sat-Wed)`,
+            suggestion: 'Sat-Wed'
+          });
+        }
+        
+        // Check for consecutive holidays
+        if (index < parsedHolidays.length - 1) {
+          const nextHoliday = parsedHolidays[index + 1];
+          const daysBetween = Math.floor((nextHoliday.date - date) / 86400000);
+          
+          if (daysBetween <= 5 && daysBetween > 1) {
+            const ptoDaysNeeded = daysBetween - 1;
+            const totalDaysOff = daysBetween + 1;
+            opportunities.push({
+              type: 'cluster',
+              holiday: `${holiday.name} + ${nextHoliday.name}`,
+              date: date,
+              ptoDays: ptoDaysNeeded,
+              totalDays: totalDaysOff,
+              roi: totalDaysOff / ptoDaysNeeded,
+              description: `Bridge ${ptoDaysNeeded} day(s) between holidays for ${totalDaysOff} days off`,
+              suggestion: `${this.formatDate(date)} - ${this.formatDate(nextHoliday.date)}`
+            });
+          }
+        }
+      });
+      
+      // Sort by ROI (best value first)
+      return opportunities.sort((a, b) => b.roi - a.roi);
     }
   };
 
@@ -92,7 +270,7 @@
   function updateThemeIcon() {
     const icon = DOM.themeToggle?.querySelector('.theme-icon');
     if (icon) {
-      icon.textContent = AppState.theme === 'dark' ? 'Light' : 'Dark';
+      icon.textContent = AppState.theme === 'dark' ? '☀️' : '🌙';
     }
   }
 
@@ -177,7 +355,14 @@
       ${state.details ? `<p class="panel-description">${Utils.escapeHtml(state.details)}</p>` : ''}
       
       <div class="panel-section">
-        <h3 class="panel-section-title">📅 Holidays</h3>
+        <h3 class="panel-section-title">� Smart PTO Recommendations</h3>
+        <div class="pto-recommendations" id="ptoRecommendations">
+          ${generatePTORecommendations(state)}
+        </div>
+      </div>
+      
+      <div class="panel-section">
+        <h3 class="panel-section-title">�📅 Holidays</h3>
         <div class="panel-holidays">
           ${(state.holidays || []).map(h => `
             <div class="panel-holiday">
@@ -210,6 +395,89 @@
     if (DOM.selectedStateDisplay) {
       DOM.selectedStateDisplay.textContent = '—';
     }
+  }
+  
+  // ==================== SMART PTO RECOMMENDATIONS ====================
+  function generatePTORecommendations(state) {
+    if (!state.holidays || state.holidays.length === 0) {
+      return '<p class="pto-no-data">No holiday data available for PTO analysis.</p>';
+    }
+    
+    const opportunities = Utils.analyzePTOOpportunities(state.holidays);
+    
+    if (opportunities.length === 0) {
+      return '<p class="pto-no-data">No optimal PTO opportunities found for this state.</p>';
+    }
+    
+    // Group by type
+    const bridges = opportunities.filter(o => o.type === 'bridge');
+    const weekends = opportunities.filter(o => o.type === 'weekend');
+    const stretches = opportunities.filter(o => o.type === 'stretch');
+    const clusters = opportunities.filter(o => o.type === 'cluster');
+    
+    let html = '<div class="pto-summary">';
+    html += `<div class="pto-summary-stat"><span class="pto-stat-number">${bridges.length}</span> Bridge Days</div>`;
+    html += `<div class="pto-summary-stat"><span class="pto-stat-number">${weekends.length}</span> Long Weekends</div>`;
+    html += `<div class="pto-summary-stat"><span class="pto-stat-number">${stretches.length + clusters.length}</span> Vacation Weeks</div>`;
+    html += '</div>';
+    
+    html += '<div class="pto-opportunities">';
+    
+    // Top 5 best opportunities
+    const topOpportunities = opportunities.slice(0, 5);
+    
+    topOpportunities.forEach((opp, index) => {
+      const icons = {
+        bridge: '🌉',
+        weekend: '🎉',
+        stretch: '🏖️',
+        cluster: '⭐'
+      };
+      
+      const typeLabels = {
+        bridge: 'Bridge Day',
+        weekend: 'Long Weekend',
+        stretch: 'Extended Break',
+        cluster: 'Holiday Cluster'
+      };
+      
+      html += `
+        <div class="pto-opportunity ${opp.type}">
+          <div class="pto-opp-header">
+            <span class="pto-opp-icon">${icons[opp.type]}</span>
+            <div class="pto-opp-title">
+              <strong>${Utils.escapeHtml(opp.holiday)}</strong>
+              <span class="pto-opp-type">${typeLabels[opp.type]}</span>
+            </div>
+            <div class="pto-opp-badge">
+              <span class="pto-days-off">${opp.totalDays} days</span>
+            </div>
+          </div>
+          <div class="pto-opp-body">
+            <p class="pto-opp-description">${Utils.escapeHtml(opp.description)}</p>
+            <div class="pto-opp-stats">
+              <div class="pto-opp-stat">
+                <span class="label">PTO Cost:</span>
+                <span class="value">${opp.ptoDays === 0 ? 'FREE' : opp.ptoDays + ' day' + (opp.ptoDays > 1 ? 's' : '')}</span>
+              </div>
+              <div class="pto-opp-stat">
+                <span class="label">Total Days Off:</span>
+                <span class="value">${opp.totalDays} days</span>
+              </div>
+              <div class="pto-opp-stat">
+                <span class="label">ROI:</span>
+                <span class="value roi-badge\">${opp.roi === Infinity ? '∞' : opp.roi.toFixed(1) + 'x'}</span>
+              </div>
+            </div>
+            <div class=\"pto-opp-dates\">${opp.suggestion}</div>
+          </div>
+        </div>
+      `;
+    });
+    
+    html += '</div>';
+    
+    return html;
   }
 
   // ==================== GRID VIEW ====================
@@ -342,11 +610,14 @@
 
   // ==================== INITIALIZATION ====================
   async function init() {
-    console.log('🚀 Initializing Holiday Calendar...');
+    console.log('🚀 Initializing PTO Optimizer...');
     
     // Load data
     AppState.states = await loadData();
     console.log(`✅ Loaded ${AppState.states.length} states`);
+    
+    // Populate autocomplete datalists
+    populateDatalist();
     
     // Calculate stats
     const totalHolidays = AppState.states.reduce((sum, state) => 
@@ -365,7 +636,23 @@
     // Render initial view
     switchView(CONFIG.defaultView);
     
-    console.log('✨ Holiday Calendar ready!');
+    console.log('✨ PTO Optimizer ready!');
+  }
+  
+  // ==================== AUTOCOMPLETE ====================
+  function populateDatalist() {
+    const states = AppState.states.map(state => ({
+      name: state.name,
+      short: state.short
+    })).sort((a, b) => a.name.localeCompare(b.name));
+    
+    // Populate both datalists
+    [DOM.stateDatalist, DOM.stateDatalist2].forEach(datalist => {
+      if (!datalist) return;
+      datalist.innerHTML = states.map(state => 
+        `<option value="${state.name}">${state.short} - ${state.name}</option>`
+      ).join('');
+    });
   }
 
   // Start the application

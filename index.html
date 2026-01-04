@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <meta name="description" content="Professional US state and federal holiday calendar for 2026 with interactive state explorer" />
-  <title>US Holidays 2026 | State Holiday Calendar</title>
+  <meta name="description" content="Professional US state and federal holiday calendar for 2026 with interactive state explorer and PTO optimizer" />
+  <title>PTO Optimizer | US Holidays 2026</title>
   <link rel="stylesheet" href="./styles.css" />
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -18,7 +18,7 @@
     <!-- Top Navigation Bar -->
     <nav class="top-nav">
       <div class="nav-brand">
-        <span class="nav-title">US Holidays 2026</span>
+        <span class="nav-title">PTO Optimizer</span>
       </div>
       
       <div class="nav-actions">
@@ -29,7 +29,11 @@
             placeholder="Quick search..." 
             aria-label="Quick search state" 
             type="text"
+            list="stateDatalist"
             autocomplete="off" />
+          <datalist id="stateDatalist">
+            <!-- Populated by JavaScript -->
+          </datalist>
         </div>
         
         <button id="themeToggle" class="icon-btn" aria-label="Toggle dark mode" title="Toggle theme">
@@ -42,9 +46,9 @@
     <header class="hero-compact">
       <div class="hero-content-compact">
         <h1 class="hero-title-compact">
-          <span class="gradient-text">Explore US Holiday Calendar</span>
+          <span class="gradient-text">PTO Optimizer</span>
         </h1>
-        <p class="hero-subtitle-compact">Interactive map • 50 states • Smart PTO planning for 2026</p>
+        <p class="hero-subtitle-compact">Maximize your vacation days • 50 states • Smart holiday planning for 2026</p>
       </div>
 
       <!-- View Switcher -->
@@ -106,7 +110,11 @@
               placeholder="Search states..." 
               aria-label="Search state" 
               type="text"
+              list="stateDatalist2"
               autocomplete="off" />
+            <datalist id="stateDatalist2">
+              <!-- Populated by JavaScript -->
+            </datalist>
           </div>
           
           <div class="state-list" id="stateList">
