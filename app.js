@@ -21,7 +21,10 @@
     searchQuery: '',
     currentFilter: 'all',
     sortBy: 'name',
-    theme: localStorage.getItem('theme') || 'light'
+    theme: localStorage.getItem('theme') || 'light',
+    map: null,
+    stateMarkers: [],
+    selectedMarker: null
   };
 
   // ==================== DOM REFERENCES ====================
@@ -318,22 +321,98 @@
     });
   }
 
-  function initUSMap() {
+  async function initUSMap() {
     if (!DOM.usMap) return;
     
-    // Create interactive US map visualization
-    DOM.usMap.innerHTML = `
-      <div class="map-placeholder">
-        <div class="map-instruction">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-            <circle cx="12" cy="10" r="3"/>
-          </svg>
-          <h3>Select a State</h3>
-          <p>Choose a state from the list on the left or search above</p>
-        </div>
-      </div>
-    `;
+    // Clear existing map
+    DOM.usMap.innerHTML = '';
+    if (AppState.map) {
+      AppState.map.remove();
+    }
+    
+    // Initialize Leaflet map
+    AppState.map = L.map('usMap', {
+      zoomControl: true,
+      scrollWheelZoom: true,
+      dragging: true,
+      minZoom: 3,
+      maxZoom: 7
+    }).setView([39.8283, -98.5795], 4); // Center of USA
+    
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+      maxZoom: 18
+    }).addTo(AppState.map);
+    
+    // Load and add state markers
+    try {
+      const response = await fetch('./data/us-states-geo.json');
+      const geoData = await response.json();
+      
+      // Clear existing markers
+      AppState.stateMarkers.forEach(marker => marker.remove());
+      AppState.stateMarkers = [];
+      
+      // Create custom icon
+      const stateIcon = L.divIcon({
+        className: 'state-marker',
+        html: '<div class="marker-pin"></div>',
+        iconSize: [30, 30],
+        iconAnchor: [15, 15]
+      });
+      
+      // Add marker for each state
+      geoData.features.forEach(feature => {
+        const { name, short } = feature.properties;
+        const [lng, lat] = feature.geometry.coordinates;
+        
+        // Find state data
+        const stateData = AppState.states.find(s => s.short === short || s.name === name);
+        if (!stateData) return;
+        
+        const marker = L.marker([lat, lng], { icon: stateIcon })
+          .bindTooltip(name, {
+            permanent: false,
+            direction: 'top',
+            className: 'state-tooltip'
+          })
+          .on('click', () => {
+            selectStateFromMap(stateData, marker);
+          })
+          .on('mouseover', function() {
+            this.getElement().classList.add('marker-hover');
+          })
+          .on('mouseout', function() {
+            if (AppState.selectedMarker !== this) {
+              this.getElement().classList.remove('marker-hover');
+            }
+          })
+          .addTo(AppState.map);
+        
+        marker.stateData = stateData;
+        AppState.stateMarkers.push(marker);
+      });
+    } catch (error) {
+      console.error('Error loading state geo data:', error);
+    }
+  }
+  
+  function selectStateFromMap(state, marker) {
+    // Remove previous selection highlight
+    if (AppState.selectedMarker) {
+      AppState.selectedMarker.getElement().classList.remove('marker-selected');
+    }
+    
+    // Highlight new selection
+    marker.getElement().classList.add('marker-selected');
+    AppState.selectedMarker = marker;
+    
+    // Select the state
+    selectState(state);
+    
+    // Pan to marker
+    AppState.map.panTo(marker.getLatLng(), { animate: true, duration: 0.5 });
   }
 
   function selectState(state) {
